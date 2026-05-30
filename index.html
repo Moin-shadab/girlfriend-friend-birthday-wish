@@ -865,7 +865,7 @@ section {
   <section id="hero">
     <div class="hero-hearts" id="heroHearts"></div>
     <span class="hero-badge">✨ Happy Birthday ✨</span>
-    <h1 class="hero-name" id="heroName" data-text="XYZ">XYZ</h1>
+    <h1 class="hero-name" id="heroName" data-text="jasmeen">jasmeen</h1>
     <p class="hero-tagline" id="heroTagline">
       The universe took its time crafting someone as extraordinary as you — 
       and it was worth every second.
@@ -936,7 +936,7 @@ section {
         <div class="pin-text" id="pinText2">
           <p class="pin-num">03 / 04</p>
           <h2 id="pinH2">Her Energy</h2>
-          <p id="pinP2">She enters a room and the whole vibe shifts. Laughter comes easier, the air feels lighter, and somehow everything just feels more alive. That's the XYZ effect.</p>
+          <p id="pinP2">She enters a room and the whole vibe shifts. Laughter comes easier, the air feels lighter, and somehow everything just feels more alive. That's the jasmeen effect.</p>
         </div>
         <div class="pin-text" id="pinText3">
           <p class="pin-num">04 / 04</p>
@@ -1054,7 +1054,7 @@ section {
     <div class="finale-sparkles" id="finalSparkles"></div>
     <h2 class="finale-title sr" id="finaleTitle">
       Happy Birthday,<br/>
-      <span id="finaleName">XYZ</span> 🎀
+      <span id="finaleName">jasmeen</span> 🎀
     </h2>
     <p class="finale-msg sr">
       May this year bring you everything your beautiful heart deserves —
@@ -1075,7 +1075,7 @@ section {
    ★ CONFIGURATION — change anything here ★
 ═══════════════════════════════════════════════ */
 const CONFIG = {
-  name:     "XYZ",         // ← Her name (changes everywhere)
+  name:     "jasmeen",         // ← Her name (changes everywhere)
   password: "1430",        // ← Secret password
 
   // ── Pinned scroll slides ──
@@ -1149,7 +1149,7 @@ function applyName() {
     const h = document.getElementById(`pinH${i}`);
     const p = document.getElementById(`pinP${i}`);
     if (h) h.textContent = s.heading;
-    if (p) p.textContent = s.body.replace(/XYZ/g, n);
+    if (p) p.textContent = s.body.replace(/jasmeen/g, n);
   });
 
   // Reasons use name
@@ -1330,7 +1330,7 @@ function buildReasons() {
       <div class="reason-num">0${i+1}</div>
       <div class="reason-content">
         <h3>${r.title}</h3>
-        <p>${r.body.replace(/XYZ|her/g, m => m === 'XYZ' ? CONFIG.name : m)}</p>
+        <p>${r.body.replace(/jasmeen|her/g, m => m === 'jasmeen' ? CONFIG.name : m)}</p>
       </div>`;
     list.appendChild(item);
   });

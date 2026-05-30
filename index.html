@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Happy Birthday, XYZ 🎀</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+<style>
+/* ─────────────── CHANGE ANYTHING HERE ─────────────── */
+:root {
+  --name: "XYZ";                    /* ← change name here */
+  --password: "1430";               /* ← change password here */
+
+  /* Pink palette */
+  --pink-deep:    #c9517a;
+  --pink-main:    #e8789a;
+  --pink-soft:    #f4a7be;
+  --pink-blush:   #fce4ec;
+  --pink-light:   #fff0f5;
+  --pink-glow:    #ffb6c1;
+  --white:        #ffffff;
+  --text-dark:    #3a1a26;
+  --text-mid:     #7a3a52;
+  --text-light:   #c9849e;
+
+  /* Fonts */
+  --font-display: 'Playfair Display', serif;
+  --font-body:    'Cormorant Garamond', serif;
+  --font-ui:      'DM Sans', sans-serif;
+}
+/* ─────────────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--white);
+  color: var(--text-dark);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── Custom Cursor ── */
+#cursor {
+  position: fixed;
+  width: 18px; height: 18px;
+  background: var(--pink-main);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform .12s ease, background .2s, width .2s, height .2s;
+  mix-blend-mode: multiply;
+}
+#cursor-ring {
+  position: fixed;
+  width: 40px; height: 40px;
+  border: 1.5px solid var(--pink-main);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform .35s ease, opacity .3s;
+  opacity: .5;
+}
+body:hover #cursor { opacity: 1; }
+
+/* ══════════════════════════════════════════
+   PASSWORD GATE
+══════════════════════════════════════════ */
+#gate {
+  position: fixed; inset: 0;
+  z-index: 8000;
+  background: linear-gradient(135deg, #fff0f5 0%, #fce4ec 40%, #f8bbd9 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  transition: opacity .8s ease, transform .8s ease;
+}
+#gate.hide {
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+.gate-emoji { font-size: clamp(48px, 8vw, 80px); animation: floatEmoji 3s ease-in-out infinite; }
+@keyframes floatEmoji {
+  0%,100% { transform: translateY(0) rotate(-5deg); }
+  50%      { transform: translateY(-14px) rotate(5deg); }
+}
+
+.gate-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 5vw, 48px);
+  color: var(--pink-deep);
+  letter-spacing: .02em;
+  text-align: center;
+}
+
+.gate-sub {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  color: var(--text-light);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* Star / Heart password input */
+.star-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+}
+.star-dot {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid var(--pink-soft);
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.star-dot.filled {
+  border-color: var(--pink-deep);
+  background: var(--pink-deep);
+  transform: scale(1.2);
+}
+.star-dot.filled::before {
+  content: "♥";
+  color: white;
+  font-size: 11px;
+  animation: popHeart .3s ease;
+}
+@keyframes popHeart {
+  0%   { transform: scale(0) rotate(-20deg); }
+  60%  { transform: scale(1.4) rotate(5deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+.star-dot.wrong {
+  border-color: #e53935;
+  background: #ffcdd2;
+  animation: shake .4s ease;
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+
+/* Hidden real input */
+#pin-input {
+  position: absolute;
+  opacity: 0;
+  width: 1px; height: 1px;
+  pointer-events: none;
+}
+
+.gate-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 68px);
+  gap: 12px;
+}
+.key-btn {
+  height: 68px;
+  border-radius: 16px;
+  border: 1.5px solid var(--pink-soft);
+  background: rgba(255,255,255,.7);
+  font-family: var(--font-ui);
+  font-size: 22px;
+  color: var(--pink-deep);
+  cursor: pointer;
+  transition: all .15s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.key-btn:hover { background: var(--pink-blush); transform: scale(1.05); }
+.key-btn:active { transform: scale(.95); background: var(--pink-soft); }
+.key-btn.del { font-size: 18px; }
+.key-btn.zero { grid-column: 2; }
+
+.gate-hint {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--text-light);
+  opacity: .7;
+}
+
+/* ══════════════════════════════════════════
+   MAIN CONTENT
+══════════════════════════════════════════ */
+#main { opacity: 0; transition: opacity 1s ease; }
+#main.show { opacity: 1; }
+
+/* ── Floating petals bg ── */
+.petals-bg {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.petal {
+  position: absolute;
+  font-size: 18px;
+  opacity: .18;
+  animation: petalFall linear infinite;
+}
+@keyframes petalFall {
+  0%   { transform: translateY(-60px) rotate(0deg); opacity: 0; }
+  10%  { opacity: .18; }
+  90%  { opacity: .12; }
+  100% { transform: translateY(110vh) rotate(540deg); opacity: 0; }
+}
+
+/* ── Section base ── */
+section {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(60px, 10vw, 120px) clamp(20px, 6vw, 80px);
+  overflow: hidden;
+}
+
+/* ── Hero ── */
+#hero {
+  background: linear-gradient(160deg, #fff0f5 0%, #fce4ec 60%, #f8c8dc 100%);
+  text-align: center;
+  gap: 24px;
+}
+
+.hero-badge {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--pink-deep);
+  background: rgba(232,120,154,.12);
+  border: 1px solid rgba(232,120,154,.3);
+  padding: 8px 20px;
+  border-radius: 99px;
+  display: inline-block;
+  animation: fadeSlideUp .8s ease both;
+}
+
+.hero-name {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 12vw, 140px);
+  line-height: .95;
+  color: var(--pink-deep);
+  animation: fadeSlideUp .8s .15s ease both;
+  position: relative;
+}
+.hero-name::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(232,120,154,.25);
+  transform: translate(4px, 4px);
+  z-index: -1;
+}
+
+.hero-tagline {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: clamp(18px, 3vw, 28px);
+  color: var(--text-mid);
+  max-width: 560px;
+  animation: fadeSlideUp .8s .3s ease both;
+}
+
+.hero-scroll-hint {
+  margin-top: 40px;
+  animation: fadeSlideUp .8s .5s ease both;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.scroll-arrow {
+  width: 24px; height: 24px;
+  border-right: 2px solid var(--pink-main);
+  border-bottom: 2px solid var(--pink-main);
+  transform: rotate(45deg);
+  animation: arrowBounce 1.4s ease-in-out infinite;
+}
+@keyframes arrowBounce {
+  0%,100% { transform: rotate(45deg) translateY(0); opacity: 1; }
+  50%      { transform: rotate(45deg) translateY(8px); opacity: .4; }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Floating hearts hero decoration ── */
+.hero-hearts {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.h-heart {
+  position: absolute;
+  font-size: var(--size, 24px);
+  animation: floatHeart var(--dur, 6s) var(--delay, 0s) ease-in-out infinite;
+  opacity: var(--op, .15);
+}
+@keyframes floatHeart {
+  0%,100% { transform: translateY(0) scale(1) rotate(var(--rot1,0deg)); }
+  50%      { transform: translateY(var(--ty,-30px)) scale(1.1) rotate(var(--rot2,10deg)); }
+}
+
+/* ── Apple-style scroll sections (sticky image reveal) ── */
+.scroll-scene {
+  position: relative;
+  background: var(--white);
+}
+
+.sticky-wrap {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scroll-spacer { height: 300vh; }
+
+/* ── Image Reveal Sections ── */
+.reveal-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(30px, 6vw, 80px);
+  padding: clamp(60px, 8vw, 120px) clamp(24px, 6vw, 80px);
+  flex-wrap: wrap;
+}
+.reveal-section.reverse { flex-direction: row-reverse; }
+
+.reveal-img-wrap {
+  flex: 0 0 clamp(260px, 38vw, 480px);
+  position: relative;
+}
+.reveal-img-wrap img,
+.reveal-img-wrap .img-placeholder {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  border-radius: 24px;
+  display: block;
+}
+.img-placeholder {
+  background: linear-gradient(135deg, var(--pink-blush) 0%, var(--pink-soft) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--pink-deep);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  text-align: center;
+  padding: 20px;
+  border-radius: 24px;
+}
+.img-placeholder .big-icon { font-size: 48px; }
+
+.img-frame {
+  position: absolute;
+  inset: -12px;
+  border: 2px solid var(--pink-soft);
+  border-radius: 30px;
+  z-index: -1;
+  transition: transform .4s ease;
+}
+.reveal-img-wrap:hover .img-frame { transform: rotate(2deg) scale(1.02); }
+.reveal-img-wrap:hover img,
+.reveal-img-wrap:hover .img-placeholder { transform: rotate(-1deg); transition: transform .4s ease; }
+
+.reveal-text {
+  flex: 0 0 clamp(260px, 40vw, 520px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.reveal-tag {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--pink-main);
+}
+.reveal-heading {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 52px);
+  line-height: 1.1;
+  color: var(--text-dark);
+}
+.reveal-heading em { color: var(--pink-deep); font-style: italic; }
+.reveal-body {
+  font-family: var(--font-body);
+  font-size: clamp(16px, 1.6vw, 20px);
+  line-height: 1.7;
+  color: var(--text-mid);
+}
+.reveal-quote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(18px, 2.2vw, 26px);
+  color: var(--pink-deep);
+  border-left: 3px solid var(--pink-soft);
+  padding-left: 20px;
+  line-height: 1.5;
+}
+
+/* ── Apple scroll pinned section ── */
+#pin-section {
+  height: 500vh;
+  position: relative;
+}
+#pin-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0d0008;
+}
+.pin-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.pin-img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+.pin-img.active { opacity: 1; }
+.pin-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(13,0,8,.85) 0%, transparent 50%);
+  z-index: 2;
+}
+.pin-text {
+  position: absolute;
+  bottom: clamp(40px, 8vw, 100px);
+  left: clamp(24px, 8vw, 100px);
+  right: clamp(24px, 8vw, 100px);
+  z-index: 3;
+  color: white;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .5s ease, transform .5s ease;
+  max-width: 640px;
+}
+.pin-text.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+.pin-text .pin-num {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: .3em;
+  color: var(--pink-glow);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.pin-text h2 {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 60px);
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+.pin-text p {
+  font-family: var(--font-body);
+  font-size: clamp(15px, 1.6vw, 20px);
+  color: rgba(255,255,255,.8);
+  line-height: 1.6;
+}
+.pin-progress {
+  position: absolute;
+  right: clamp(16px, 4vw, 48px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pin-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.3);
+  transition: all .3s ease;
+  cursor: pointer;
+}
+.pin-dot.active { background: var(--pink-glow); transform: scale(1.6); }
+
+/* ── Stats / Facts row ── */
+#facts {
+  background: linear-gradient(135deg, var(--pink-blush) 0%, #fff0f5 100%);
+  padding: clamp(60px, 8vw, 120px) clamp(24px, 6vw, 80px);
+  text-align: center;
+}
+.facts-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 48px);
+  color: var(--pink-deep);
+  margin-bottom: 60px;
+}
+.facts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.fact-card {
+  background: white;
+  border-radius: 20px;
+  padding: 36px 24px;
+  box-shadow: 0 4px 30px rgba(201,81,122,.08);
+  border: 1px solid rgba(244,167,190,.3);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.fact-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(201,81,122,.15);
+}
+.fact-num {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 64px);
+  color: var(--pink-deep);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.fact-label {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--text-light);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+/* ── Pickup lines carousel ── */
+#pickup {
+  background: var(--white);
+  padding: clamp(60px, 8vw, 120px) clamp(24px, 6vw, 80px);
+  overflow: hidden;
+}
+.pickup-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 48px);
+  color: var(--pink-deep);
+  text-align: center;
+  margin-bottom: 16px;
+}
+.pickup-sub {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--text-light);
+  text-align: center;
+  margin-bottom: 50px;
+  font-size: 18px;
+}
+.pickup-track {
+  display: flex;
+  gap: 24px;
+  animation: scrollLeft 30s linear infinite;
+  width: max-content;
+}
+.pickup-track:hover { animation-play-state: paused; }
+@keyframes scrollLeft {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.pickup-card {
+  background: linear-gradient(135deg, #fff0f5 0%, var(--pink-blush) 100%);
+  border: 1.5px solid rgba(244,167,190,.5);
+  border-radius: 20px;
+  padding: 28px 32px;
+  min-width: 300px;
+  max-width: 340px;
+  flex-shrink: 0;
+}
+.pickup-card .quote-mark {
+  font-family: var(--font-display);
+  font-size: 48px;
+  color: var(--pink-soft);
+  line-height: .5;
+  margin-bottom: 12px;
+}
+.pickup-card p {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: clamp(15px, 1.8vw, 18px);
+  color: var(--text-mid);
+  line-height: 1.6;
+}
+
+/* ── Reasons section ── */
+#reasons {
+  background: linear-gradient(160deg, #0d0008 0%, #1a0014 100%);
+  padding: clamp(80px, 10vw, 140px) clamp(24px, 6vw, 80px);
+  color: white;
+}
+.reasons-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 52px);
+  color: var(--pink-glow);
+  text-align: center;
+  margin-bottom: 20px;
+}
+.reasons-sub {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: rgba(255,255,255,.5);
+  text-align: center;
+  margin-bottom: 70px;
+  font-size: 18px;
+}
+.reasons-list {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.reason-item {
+  display: flex;
+  gap: 28px;
+  padding: 32px 0;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.reason-item.visible { opacity: 1; transform: translateX(0); }
+.reason-num {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 56px);
+  color: rgba(232,120,154,.2);
+  line-height: 1;
+  flex-shrink: 0;
+  width: 70px;
+}
+.reason-content h3 {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.2vw, 26px);
+  color: var(--pink-glow);
+  margin-bottom: 8px;
+}
+.reason-content p {
+  font-family: var(--font-body);
+  font-size: clamp(15px, 1.5vw, 18px);
+  color: rgba(255,255,255,.65);
+  line-height: 1.6;
+}
+
+/* ── Memory / Photo wall ── */
+#memories {
+  background: var(--pink-light);
+  padding: clamp(60px, 8vw, 120px) clamp(24px, 6vw, 80px);
+}
+.mem-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 48px);
+  color: var(--pink-deep);
+  text-align: center;
+  margin-bottom: 12px;
+}
+.mem-sub {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--text-light);
+  text-align: center;
+  margin-bottom: 50px;
+  font-size: 18px;
+}
+.mem-masonry {
+  columns: 3;
+  column-gap: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+@media (max-width: 720px) { .mem-masonry { columns: 2; } }
+@media (max-width: 480px) { .mem-masonry { columns: 1; } }
+.mem-item {
+  break-inside: avoid;
+  margin-bottom: 20px;
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.mem-item:hover {
+  transform: scale(1.02) rotate(.5deg);
+  box-shadow: 0 16px 40px rgba(201,81,122,.2);
+}
+.mem-item img, .mem-item .mem-placeholder {
+  width: 100%;
+  display: block;
+  border-radius: 18px;
+}
+.mem-placeholder {
+  background: linear-gradient(135deg, var(--pink-blush), var(--pink-soft));
+  aspect-ratio: var(--ar, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--pink-deep);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  padding: 20px;
+  text-align: center;
+}
+.mem-placeholder span:first-child { font-size: 32px; }
+.mem-caption {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(201,81,122,.8) 0%, transparent 50%);
+  display: flex;
+  align-items: flex-end;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity .3s ease;
+  border-radius: 18px;
+  color: white;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 15px;
+}
+.mem-item:hover .mem-caption { opacity: 1; }
+
+/* ── Final wish ── */
+#finale {
+  background: linear-gradient(160deg, #fff0f5 0%, #fce4ec 60%, #f4a7be 100%);
+  text-align: center;
+  padding: clamp(80px, 12vw, 160px) clamp(24px, 6vw, 80px);
+  position: relative;
+  overflow: hidden;
+}
+.finale-sparkles { position: absolute; inset: 0; pointer-events: none; }
+.finale-sparkle {
+  position: absolute;
+  font-size: var(--fs, 20px);
+  animation: sparklePop var(--dur, 3s) var(--dl, 0s) ease-in-out infinite;
+  opacity: 0;
+}
+@keyframes sparklePop {
+  0%,100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50%      { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+.finale-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 7vw, 90px);
+  color: var(--pink-deep);
+  line-height: 1.05;
+  margin-bottom: 24px;
+  position: relative;
+}
+.finale-msg {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: clamp(18px, 2.5vw, 28px);
+  color: var(--text-mid);
+  max-width: 640px;
+  margin: 0 auto 48px;
+  line-height: 1.6;
+}
+.finale-hearts {
+  font-size: clamp(28px, 4vw, 48px);
+  letter-spacing: 8px;
+  animation: heartPulse 1.5s ease-in-out infinite;
+}
+@keyframes heartPulse {
+  0%,100% { transform: scale(1); }
+  50%      { transform: scale(1.12); }
+}
+
+/* ── Confetti burst on load ── */
+.confetti { position: fixed; pointer-events: none; z-index: 7000; top: -10px; }
+
+/* ── Scroll reveal utility ── */
+.sr { opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; }
+.sr.visible { opacity: 1; transform: translateY(0); }
+.sr-left  { opacity: 0; transform: translateX(-50px); transition: opacity .7s ease, transform .7s ease; }
+.sr-right { opacity: 0; transform: translateX(50px);  transition: opacity .7s ease, transform .7s ease; }
+.sr-left.visible, .sr-right.visible { opacity: 1; transform: translateX(0); }
+
+/* ── Responsive tweaks ── */
+@media (max-width: 600px) {
+  .reveal-section { gap: 36px; }
+  .gate-keypad { grid-template-columns: repeat(3, 60px); }
+  .key-btn { height: 60px; font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- ══ PASSWORD GATE ══ -->
+<div id="gate">
+  <div class="gate-emoji">🎀</div>
+  <h1 class="gate-title">For Someone Special</h1>
+  <p class="gate-sub">Enter your secret code</p>
+
+  <div class="star-row" id="star-row">
+    <!-- dots rendered by JS based on password length -->
+  </div>
+
+  <input type="tel" id="pin-input" maxlength="10" inputmode="numeric" autocomplete="off" />
+
+  <div class="gate-keypad" id="keypad">
+    <button class="key-btn" data-key="1">1</button>
+    <button class="key-btn" data-key="2">2</button>
+    <button class="key-btn" data-key="3">3</button>
+    <button class="key-btn" data-key="4">4</button>
+    <button class="key-btn" data-key="5">5</button>
+    <button class="key-btn" data-key="6">6</button>
+    <button class="key-btn" data-key="7">7</button>
+    <button class="key-btn" data-key="8">8</button>
+    <button class="key-btn" data-key="9">9</button>
+    <button class="key-btn del" data-key="del">⌫</button>
+    <button class="key-btn zero" data-key="0">0</button>
+  </div>
+
+  <p class="gate-hint">Tap the numbers above ↑</p>
+</div>
+
+<!-- ══ MAIN CONTENT ══ -->
+<div id="main">
+
+  <!-- Floating petals -->
+  <div class="petals-bg" id="petals"></div>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <div class="hero-hearts" id="heroHearts"></div>
+    <span class="hero-badge">✨ Happy Birthday ✨</span>
+    <h1 class="hero-name" id="heroName" data-text="XYZ">XYZ</h1>
+    <p class="hero-tagline" id="heroTagline">
+      The universe took its time crafting someone as extraordinary as you — 
+      and it was worth every second.
+    </p>
+    <div class="hero-scroll-hint">
+      <p style="font-family:var(--font-ui);font-size:12px;letter-spacing:.15em;color:var(--text-light);text-transform:uppercase">Scroll to explore her world</p>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ── REVEAL 1 ── -->
+  <section class="reveal-section" style="background:var(--white)">
+    <div class="reveal-img-wrap sr-left">
+      <!-- REPLACE src with real image path -->
+      <div class="img-placeholder" style="aspect-ratio:3/4">
+        <span class="big-icon">📸</span>
+        <strong>Add Photo 1 Here</strong>
+        <small>Replace this div with an &lt;img&gt; tag</small>
+      </div>
+      <div class="img-frame"></div>
+    </div>
+    <div class="reveal-text sr-right">
+      <span class="reveal-tag">Chapter One · The Beginning</span>
+      <h2 class="reveal-heading">She walks in like <em>sunshine</em> owns the room</h2>
+      <p class="reveal-body">
+        There's something about the way she carries herself — effortlessly radiant, 
+        quietly powerful. The kind of presence that makes every room warmer, 
+        every moment brighter, every memory sweeter.
+      </p>
+      <blockquote class="reveal-quote">
+        "She's a soft place to land and a force of nature all at once."
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ── APPLE PINNED SCROLL ── -->
+  <div id="pin-section">
+    <div id="pin-sticky">
+      <div class="pin-canvas" id="pinCanvas">
+
+        <!-- Slide images — replace src with real photos -->
+        <div class="pin-img active" id="pinImg0" style="background:linear-gradient(135deg,#c9517a,#e8789a)">
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:80px">📸</div>
+        </div>
+        <div class="pin-img" id="pinImg1" style="background:linear-gradient(135deg,#e8789a,#f4a7be)">
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:80px">🌸</div>
+        </div>
+        <div class="pin-img" id="pinImg2" style="background:linear-gradient(135deg,#f4a7be,#fce4ec)">
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:80px">✨</div>
+        </div>
+        <div class="pin-img" id="pinImg3" style="background:linear-gradient(135deg,#fce4ec,#c9517a)">
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:80px">💫</div>
+        </div>
+
+        <div class="pin-overlay"></div>
+
+        <!-- Slide texts -->
+        <div class="pin-text active" id="pinText0">
+          <p class="pin-num">01 / 04</p>
+          <h2 id="pinH0">Her Smile</h2>
+          <p id="pinP0">That one smile that can fix a bad day for everyone around her. Scientists can't explain it, poets can't describe it — but everyone who's seen it knows exactly what we mean.</p>
+        </div>
+        <div class="pin-text" id="pinText1">
+          <p class="pin-num">02 / 04</p>
+          <h2 id="pinH1">Her Heart</h2>
+          <p id="pinP1">She loves deeply, fiercely, and without conditions. The kind of heart that remembers everyone's birthdays, checks in on people randomly, and cares even when no one is watching.</p>
+        </div>
+        <div class="pin-text" id="pinText2">
+          <p class="pin-num">03 / 04</p>
+          <h2 id="pinH2">Her Energy</h2>
+          <p id="pinP2">She enters a room and the whole vibe shifts. Laughter comes easier, the air feels lighter, and somehow everything just feels more alive. That's the XYZ effect.</p>
+        </div>
+        <div class="pin-text" id="pinText3">
+          <p class="pin-num">04 / 04</p>
+          <h2 id="pinH3">Her Magic</h2>
+          <p id="pinP3">She's the kind of rare that happens once in a universe. Everything about her — the way she thinks, the way she feels, the way she exists — is extraordinary.</p>
+        </div>
+
+        <!-- Dots -->
+        <div class="pin-progress" id="pinProgress">
+          <div class="pin-dot active"></div>
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── REVEAL 2 ── -->
+  <section class="reveal-section reverse" style="background:var(--pink-light)">
+    <div class="reveal-img-wrap sr-right">
+      <div class="img-placeholder" style="aspect-ratio:3/4">
+        <span class="big-icon">🌸</span>
+        <strong>Add Photo 2 Here</strong>
+        <small>Replace this div with an &lt;img&gt; tag</small>
+      </div>
+      <div class="img-frame"></div>
+    </div>
+    <div class="reveal-text sr-left">
+      <span class="reveal-tag">Chapter Two · The Soul</span>
+      <h2 class="reveal-heading">A <em>mind</em> that dazzles, a soul that heals</h2>
+      <p class="reveal-body">
+        She doesn't just think — she creates. She doesn't just listen — she understands. 
+        Every conversation with her leaves you feeling seen, heard, and somehow 
+        a little more yourself than before.
+      </p>
+      <blockquote class="reveal-quote">
+        "The rarest kind of person: brilliant without knowing it."
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ── FACTS ── -->
+  <section id="facts">
+    <h2 class="facts-title sr">A Few Fun Facts About Her 🎀</h2>
+    <div class="facts-grid">
+      <div class="fact-card sr">
+        <div class="fact-num" id="factSmiles">∞</div>
+        <div class="fact-label">Smiles Gifted</div>
+      </div>
+      <div class="fact-card sr">
+        <div class="fact-num">100%</div>
+        <div class="fact-label">Authentically Her</div>
+      </div>
+      <div class="fact-card sr">
+        <div class="fact-num">1</div>
+        <div class="fact-label">Of a Kind, Ever</div>
+      </div>
+      <div class="fact-card sr">
+        <div class="fact-num">★★★★★</div>
+        <div class="fact-label" style="font-size:11px">Rating (no stars left)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PICKUP LINES / COMPLIMENTS ── -->
+  <section id="pickup">
+    <h2 class="pickup-title sr">Lines She Deserves to Hear</h2>
+    <p class="pickup-sub sr">hover to pause • scroll naturally</p>
+    <div style="overflow:hidden; width:100%; position:relative">
+      <div class="pickup-track" id="pickupTrack"></div>
+    </div>
+  </section>
+
+  <!-- ── REVEAL 3 ── -->
+  <section class="reveal-section" style="background:var(--white)">
+    <div class="reveal-img-wrap sr-left">
+      <div class="img-placeholder" style="aspect-ratio:3/4">
+        <span class="big-icon">💫</span>
+        <strong>Add Photo 3 Here</strong>
+        <small>Replace this div with an &lt;img&gt; tag</small>
+      </div>
+      <div class="img-frame"></div>
+    </div>
+    <div class="reveal-text sr-right">
+      <span class="reveal-tag">Chapter Three · The Vibe</span>
+      <h2 class="reveal-heading">She's the <em>plot twist</em> everyone needed</h2>
+      <p class="reveal-body">
+        Life was going one way, and then she happened. Suddenly everything 
+        was more colorful, more interesting, more worth showing up for. 
+        That's what she does — she rewrites the story for the better.
+      </p>
+      <blockquote class="reveal-quote">
+        "She didn't change the game — she became the game."
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ── REASONS ── -->
+  <section id="reasons">
+    <h2 class="reasons-title">Why She's Absolutely Extraordinary</h2>
+    <p class="reasons-sub">An incomplete list — we'd need more pages</p>
+    <div class="reasons-list" id="reasonsList"></div>
+  </section>
+
+  <!-- ── MEMORIES WALL ── -->
+  <section id="memories">
+    <h2 class="mem-title sr">The Gallery of Her</h2>
+    <p class="mem-sub sr">Every frame, a universe</p>
+    <div class="mem-masonry" id="memMasonry"></div>
+  </section>
+
+  <!-- ── FINAL WISH ── -->
+  <section id="finale">
+    <div class="finale-sparkles" id="finalSparkles"></div>
+    <h2 class="finale-title sr" id="finaleTitle">
+      Happy Birthday,<br/>
+      <span id="finaleName">XYZ</span> 🎀
+    </h2>
+    <p class="finale-msg sr">
+      May this year bring you everything your beautiful heart deserves —
+      adventure, laughter, love, and moments so wonderful they write 
+      themselves into your forever memories.
+    </p>
+    <div class="finale-hearts sr">💗 💖 💓 💗 💖</div>
+    <br/><br/>
+    <p style="font-family:var(--font-ui);font-size:13px;color:var(--text-light);margin-top:40px;" class="sr">
+      Made with love, just for her ✨
+    </p>
+  </section>
+
+</div><!-- #main -->
+
+<script>
+/* ═══════════════════════════════════════════════
+   ★ CONFIGURATION — change anything here ★
+═══════════════════════════════════════════════ */
+const CONFIG = {
+  name:     "XYZ",         // ← Her name (changes everywhere)
+  password: "1430",        // ← Secret password
+
+  // ── Pinned scroll slides ──
+  // Replace 'null' with a real image URL e.g. "images/photo1.jpg"
+  pinSlides: [
+    { img: null, heading: "Her Smile",    body: "That one smile that can fix a bad day for everyone around her. Scientists can't explain it, poets can't describe it — but everyone who's seen it knows exactly what we mean." },
+    { img: null, heading: "Her Heart",    body: "She loves deeply, fiercely, and without conditions. The kind of heart that remembers everyone's birthdays, checks in on people randomly, and cares even when no one is watching." },
+    { img: null, heading: "Her Energy",   body: "She enters a room and the whole vibe shifts. Laughter comes easier, the air feels lighter, and somehow everything just feels more alive. That's the magic." },
+    { img: null, heading: "Her Magic",    body: "She's the kind of rare that happens once in a universe. Everything about her — the way she thinks, the way she feels, the way she exists — is extraordinary." },
+  ],
+
+  // ── Compliments / pickup lines ──
+  pickupLines: [
+    "If you were a star, you'd put the whole galaxy out of business.",
+    "Scientists are still studying how one person can have this much charm.",
+    "Warning: spending time with her may cause permanent happiness.",
+    "She's the reason the word 'breathtaking' was invented.",
+    "If kindness were a currency, she'd be the richest person alive.",
+    "The universe has good taste — it made her one of a kind.",
+    "She's the main character and we're all just lucky to be in her story.",
+    "Are you a magnet? Because everyone in the room is drawn to you.",
+    "She doesn't just light up a room — she renovates it.",
+    "Plot twist: the coolest person in the room is also the kindest.",
+    "Her laugh is the kind of sound they should put in museums.",
+    "She's proof that some people are just made of something better.",
+  ],
+
+  // ── Reasons she's extraordinary ──
+  reasons: [
+    { title: "Her Laughter is Contagious",       body: "The kind that starts as a giggle and ends with everyone in tears of joy. You can't hear it and not smile — it's scientifically impossible." },
+    { title: "She Remembers the Small Things",    body: "Your coffee order, your bad day last Tuesday, the name of your childhood pet. She listens like your words are the most important in the world." },
+    { title: "She's Brave Without Knowing It",    body: "She doesn't see her own courage — she just calls it 'getting on with it.' But everyone around her sees it clearly." },
+    { title: "Her Aesthetic is Impeccable",       body: "Whether it's how she dresses, the music she plays, or the way she arranges things — she has an eye for beauty that's entirely her own." },
+    { title: "She Makes People Feel Seen",        body: "In a world where everyone is shouting, she listens. Really listens. And somehow makes you feel like the most important person in the room." },
+    { title: "She Grows Every Single Day",        body: "She's always reading, thinking, evolving — never content to stay still. That quiet ambition? Absolutely stunning to witness." },
+  ],
+
+  // ── Memory wall ──
+  // Replace 'null' with real image URLs. captionText is shown on hover.
+  memories: [
+    { img: null, caption: "That smile tho ✨",         ar: "4/5"  },
+    { img: null, caption: "Main character energy 💅",   ar: "1/1"  },
+    { img: null, caption: "Effortlessly iconic 🌸",     ar: "3/4"  },
+    { img: null, caption: "Living her best life 💫",    ar: "1/1"  },
+    { img: null, caption: "She woke up like this 🌺",   ar: "4/5"  },
+    { img: null, caption: "Pure sunshine 🌟",           ar: "3/4"  },
+    { img: null, caption: "Heart full of gold 💗",       ar: "1/1"  },
+    { img: null, caption: "Her world, we just live in it ✨", ar: "4/5" },
+    { img: null, caption: "Unforgettable moments 🎀",   ar: "1/1"  },
+  ],
+};
+/* ═══════════════════════════════════════════════ */
+
+
+
+/* ─── Apply name everywhere ─── */
+function applyName() {
+  const n = CONFIG.name;
+  document.title = `Happy Birthday, ${n} 🎀`;
+  document.querySelectorAll('#heroName, #finaleName').forEach(el => {
+    el.textContent = el.id === 'heroName' ? n : n;
+    if (el.dataset.text !== undefined) el.dataset.text = n;
+  });
+  document.getElementById('heroTagline').textContent =
+    `The universe took its time crafting someone as extraordinary as ${n} — and it was worth every second.`;
+  document.getElementById('finaleTitle').innerHTML =
+    `Happy Birthday,<br/><span id="finaleName">${n}</span> 🎀`;
+
+  // Pin texts
+  CONFIG.pinSlides.forEach((s, i) => {
+    const h = document.getElementById(`pinH${i}`);
+    const p = document.getElementById(`pinP${i}`);
+    if (h) h.textContent = s.heading;
+    if (p) p.textContent = s.body.replace(/XYZ/g, n);
+  });
+
+  // Reasons use name
+  buildReasons();
+  buildPickup();
+  buildMemories();
+}
+
+/* ─── Password Gate ─── */
+const pwd = CONFIG.password;
+let entered = "";
+
+function buildStars() {
+  const row = document.getElementById('star-row');
+  row.innerHTML = '';
+  for (let i = 0; i < pwd.length; i++) {
+    const d = document.createElement('div');
+    d.className = 'star-dot';
+    d.id = `dot-${i}`;
+    row.appendChild(d);
+  }
+}
+
+function updateDots() {
+  for (let i = 0; i < pwd.length; i++) {
+    const d = document.getElementById(`dot-${i}`);
+    if (i < entered.length) {
+      d.classList.add('filled');
+      d.classList.remove('wrong');
+    } else {
+      d.classList.remove('filled', 'wrong');
+    }
+  }
+}
+
+function wrongAnim() {
+  for (let i = 0; i < pwd.length; i++) {
+    const d = document.getElementById(`dot-${i}`);
+    d.classList.add('wrong');
+    d.classList.remove('filled');
+  }
+  setTimeout(() => { entered = ''; updateDots(); }, 600);
+}
+
+function pressKey(k) {
+  if (k === 'del') {
+    entered = entered.slice(0, -1);
+    updateDots();
+    return;
+  }
+  if (entered.length >= pwd.length) return;
+  entered += k;
+  updateDots();
+  if (entered.length === pwd.length) {
+    setTimeout(() => {
+      if (entered === pwd) unlockGate();
+      else wrongAnim();
+    }, 200);
+  }
+}
+
+document.getElementById('keypad').addEventListener('click', e => {
+  const btn = e.target.closest('[data-key]');
+  if (btn) pressKey(btn.dataset.key);
+});
+
+// Keyboard support
+document.addEventListener('keydown', e => {
+  if (document.getElementById('gate').classList.contains('hide')) return;
+  if (e.key >= '0' && e.key <= '9') pressKey(e.key);
+  if (e.key === 'Backspace') pressKey('del');
+});
+
+function unlockGate() {
+  // Confetti burst
+  spawnConfetti();
+  const gate = document.getElementById('gate');
+  gate.classList.add('hide');
+  setTimeout(() => {
+    gate.style.display = 'none';
+    const main = document.getElementById('main');
+    main.classList.add('show');
+    setTimeout(initScrollEffects, 300);
+  }, 900);
+}
+
+/* ─── Confetti ─── */
+function spawnConfetti() {
+  const colors = ['#e8789a','#f4a7be','#c9517a','#fff','#fce4ec','#ffb6c1'];
+  for (let i = 0; i < 80; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti';
+    el.style.cssText = `
+      left: ${Math.random()*100}vw;
+      width: ${Math.random()*8+6}px;
+      height: ${Math.random()*8+6}px;
+      background: ${colors[Math.floor(Math.random()*colors.length)]};
+      border-radius: ${Math.random()>.5?'50%':'2px'};
+      animation: confettiFall ${Math.random()*2+1.5}s ease-out forwards;
+      animation-delay: ${Math.random()*0.5}s;
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3500);
+  }
+}
+const confStyle = document.createElement('style');
+confStyle.textContent = `
+@keyframes confettiFall {
+  0%   { top: -10px; transform: rotate(0) translateX(0); opacity:1; }
+  100% { top: 100vh; transform: rotate(${Math.random()*720}deg) translateX(${Math.random()*200-100}px); opacity:0; }
+}`;
+document.head.appendChild(confStyle);
+
+/* ─── Floating Petals ─── */
+function buildPetals() {
+  const container = document.getElementById('petals');
+  const emojis = ['🌸','🌺','🌷','💮','🏵️'];
+  for (let i = 0; i < 18; i++) {
+    const el = document.createElement('div');
+    el.className = 'petal';
+    el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    el.style.cssText = `
+      left: ${Math.random()*100}vw;
+      font-size: ${Math.random()*14+10}px;
+      animation-duration: ${Math.random()*12+10}s;
+      animation-delay: ${Math.random()*-15}s;
+    `;
+    container.appendChild(el);
+  }
+}
+
+/* ─── Hero Hearts ─── */
+function buildHeroHearts() {
+  const c = document.getElementById('heroHearts');
+  const hearts = ['💗','💖','💓','💕','🌸','✨'];
+  for (let i = 0; i < 16; i++) {
+    const el = document.createElement('div');
+    el.className = 'h-heart';
+    const size = Math.random()*30+14;
+    el.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+    el.style.cssText = `
+      --size:${size}px;
+      --dur:${Math.random()*6+5}s;
+      --delay:${Math.random()*-8}s;
+      --op:${Math.random()*.2+.05};
+      --ty:-${Math.random()*40+15}px;
+      --rot1:${Math.random()*20-10}deg;
+      --rot2:${Math.random()*20-10}deg;
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      font-size:${size}px;
+    `;
+    c.appendChild(el);
+  }
+}
+
+/* ─── Pickup Lines ─── */
+function buildPickup() {
+  const track = document.getElementById('pickupTrack');
+  track.innerHTML = '';
+  const all = [...CONFIG.pickupLines, ...CONFIG.pickupLines]; // duplicate for seamless loop
+  all.forEach(line => {
+    const card = document.createElement('div');
+    card.className = 'pickup-card';
+    card.innerHTML = `<div class="quote-mark">"</div><p>${line}</p>`;
+    track.appendChild(card);
+  });
+}
+
+/* ─── Reasons ─── */
+function buildReasons() {
+  const list = document.getElementById('reasonsList');
+  list.innerHTML = '';
+  CONFIG.reasons.forEach((r, i) => {
+    const item = document.createElement('div');
+    item.className = 'reason-item';
+    item.innerHTML = `
+      <div class="reason-num">0${i+1}</div>
+      <div class="reason-content">
+        <h3>${r.title}</h3>
+        <p>${r.body.replace(/XYZ|her/g, m => m === 'XYZ' ? CONFIG.name : m)}</p>
+      </div>`;
+    list.appendChild(item);
+  });
+}
+
+/* ─── Memory Wall ─── */
+const memColors = [
+  'linear-gradient(135deg,#fce4ec,#f4a7be)',
+  'linear-gradient(135deg,#f4a7be,#e8789a)',
+  'linear-gradient(135deg,#fff0f5,#fce4ec)',
+  'linear-gradient(135deg,#e8789a,#c9517a)',
+  'linear-gradient(135deg,#fce4ec,#fff0f5)',
+];
+const memIcons = ['🌸','💗','✨','🌺','💫','🌷','💖','🎀','🌟'];
+function buildMemories() {
+  const wall = document.getElementById('memMasonry');
+  wall.innerHTML = '';
+  CONFIG.memories.forEach((m, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'mem-item sr';
+    if (m.img) {
+      wrap.innerHTML = `
+        <img src="${m.img}" alt="${m.caption}" loading="lazy" style="aspect-ratio:${m.ar}" />
+        <div class="mem-caption">${m.caption}</div>`;
+    } else {
+      wrap.innerHTML = `
+        <div class="mem-placeholder" style="--ar:${m.ar};background:${memColors[i%memColors.length]}">
+          <span>${memIcons[i%memIcons.length]}</span>
+          <strong style="font-size:12px">Photo ${i+1}</strong>
+          <small>Add image URL in CONFIG.memories[${i}].img</small>
+        </div>
+        <div class="mem-caption">${m.caption}</div>`;
+    }
+    wall.appendChild(wrap);
+  });
+}
+
+/* ─── Final sparkles ─── */
+function buildFinalSparkles() {
+  const c = document.getElementById('finalSparkles');
+  const items = ['✨','🌸','💗','⭐','🌟','💫'];
+  for (let i = 0; i < 20; i++) {
+    const el = document.createElement('div');
+    el.className = 'finale-sparkle';
+    el.textContent = items[Math.floor(Math.random()*items.length)];
+    el.style.cssText = `
+      --fs:${Math.random()*24+12}px;
+      --dur:${Math.random()*3+2}s;
+      --dl:${Math.random()*4}s;
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+    `;
+    c.appendChild(el);
+  }
+}
+
+/* ─── Custom Cursor ─── */
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursor-ring');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top  = e.clientY + 'px';
+  ring.style.left   = e.clientX + 'px';
+  ring.style.top    = e.clientY + 'px';
+});
+document.addEventListener('mousedown', () => {
+  cursor.style.width = cursor.style.height = '12px';
+  cursor.style.background = 'var(--pink-deep)';
+});
+document.addEventListener('mouseup', () => {
+  cursor.style.width = cursor.style.height = '18px';
+  cursor.style.background = 'var(--pink-main)';
+});
+
+/* ─── Pin Section (Apple scroll) ─── */
+function initPinScroll() {
+  const section  = document.getElementById('pin-section');
+  const slides   = CONFIG.pinSlides.length;
+  const dots     = document.querySelectorAll('.pin-dot');
+
+  // If real images provided, apply them
+  CONFIG.pinSlides.forEach((s, i) => {
+    const imgEl = document.getElementById(`pinImg${i}`);
+    if (s.img && imgEl) {
+      imgEl.style.background = 'none';
+      imgEl.innerHTML = `<img src="${s.img}" alt="${s.heading}" style="width:100%;height:100%;object-fit:cover"/>`;
+    }
+  });
+
+  function setSlide(idx) {
+    for (let i = 0; i < slides; i++) {
+      document.getElementById(`pinImg${i}`)?.classList.toggle('active', i === idx);
+      document.getElementById(`pinText${i}`)?.classList.toggle('active', i === idx);
+    }
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+  }
+
+  dots.forEach((d, i) => d.addEventListener('click', () => setSlide(i)));
+
+  function onScroll() {
+    const rect = section.getBoundingClientRect();
+    const total = section.offsetHeight - window.innerHeight;
+    const scrolled = Math.max(0, Math.min(total, -rect.top));
+    const prog = scrolled / total; // 0–1
+    const idx = Math.min(slides - 1, Math.floor(prog * slides));
+    setSlide(idx);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+}
+
+/* ─── Scroll Reveal ─── */
+function initScrollReveal() {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.sr, .sr-left, .sr-right, .reason-item').forEach(el => {
+    observer.observe(el);
+  });
+}
+
+/* ─── Init all after unlock ─── */
+function initScrollEffects() {
+  initPinScroll();
+  initScrollReveal();
+}
+
+/* ─── Boot ─── */
+buildStars();
+buildPetals();
+buildHeroHearts();
+buildFinalSparkles();
+applyName(); // applies config name everywhere
+</script>
+</body>
+</html>

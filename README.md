@@ -3,7 +3,7 @@
 A gorgeous Apple-style scroll birthday website with password lock, pink animations, and scroll-reveal effects.
 
 ---
-   **`https://YOUR-USERNAME.github.io/birthday-xyz`**
+   **`https://moin-shadab.github.io/girlfriend-friend-birthday-wish/`**
 ---
 
 ## ✏️ How to Customize

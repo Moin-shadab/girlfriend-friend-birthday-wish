@@ -1,70 +1,156 @@
 # 🎀 Birthday Website for XYZ
 
-A gorgeous Apple-style scroll birthday website with password lock, pink animations, and scroll-reveal effects.
+A beautifully crafted Apple-inspired birthday website featuring smooth scroll animations, elegant pink aesthetics, password protection, and immersive reveal effects designed to create a memorable birthday experience.
+
+## 🌐 Live Demo
+
+<p align="center">
+  <a href="https://moin-shadab.github.io/girlfriend-friend-birthday-wish/" target="_blank">
+    View Live Website →
+  </a>
+</p>
 
 ---
-   **`https://moin-shadab.github.io/girlfriend-friend-birthday-wish/`**
+
+## ✨ Features
+
+* Apple-style scroll storytelling experience
+* Password-protected entry screen
+* Smooth animations and scroll-triggered reveals
+* Customizable photo galleries and memories
+* Personalized messages, pickup lines, and special moments
+* Responsive design for desktop and mobile devices
+* No external dependencies required
+
 ---
 
-## ✏️ How to Customize
+## 🛠 Customization Guide
 
-Open `index.html` and scroll to the `CONFIG` block at the top of `<script>`:
+Open the `index.html` file and locate the `CONFIG` object near the beginning of the `<script>` section.
 
 ```javascript
 const CONFIG = {
-  name:     "XYZ",      // ← Change to her real name
-  password: "1430",     // ← Change the secret password
+  name: "XYZ",
+  password: "1430",
 
   pinSlides: [
-    { img: "images/photo1.jpg", heading: "Her Smile", body: "..." },
-    // add real image paths here
+    {
+      img: "images/photo1.jpg",
+      heading: "Her Smile",
+      body: "..."
+    }
   ],
 
-  pickupLines: [ ... ],   // edit cute lines
-  reasons:     [ ... ],   // edit reasons she's great
-  memories:    [ ... ],   // add memory photos
+  pickupLines: [ ... ],
+  reasons: [ ... ],
+  memories: [ ... ]
 };
 ```
 
----
+### Personalize the Website
 
-## 🖼️ Adding Her Photos
-
-### Option A — GitHub (recommended)
-1. Create a folder called `images/` in your repo
-2. Upload her photos there (e.g. `photo1.jpg`, `photo2.jpg`)
-3. In CONFIG, set: `img: "images/photo1.jpg"`
-
-### Option B — Google Drive / Imgur
-- Upload to Imgur → copy direct link → paste as `img: "https://i.imgur.com/xxx.jpg"`
-
-### Where to add photos:
-| Config key | What it affects |
-|---|---|
-| `pinSlides[i].img` | The big Apple-style scroll section (4 slides) |
-| `memories[i].img` | The masonry photo wall at the bottom |
-| Reveal sections | Find `img-placeholder` divs in HTML, replace with `<img src="...">` |
+| Setting       | Description                                       |
+| ------------- | ------------------------------------------------- |
+| `name`        | Display name shown throughout the website         |
+| `password`    | Secret code required to unlock the experience     |
+| `pinSlides`   | Featured storytelling slides with images and text |
+| `pickupLines` | Cute and romantic messages                        |
+| `reasons`     | Reasons why she is special                        |
+| `memories`    | Photo gallery and memorable moments               |
 
 ---
 
-## 🎨 Change Colors
-All colors are CSS variables in `:root` — just change the hex values:
-```css
---pink-deep:  #c9517a;   /* dark pink */
---pink-main:  #e8789a;   /* main pink */
---pink-soft:  #f4a7be;   /* soft pink */
---pink-blush: #fce4ec;   /* very light */
-```
+## 🖼 Adding Photos
 
----
+### Option 1: Store Images in the Repository (Recommended)
 
-## 🔒 Password
-Default password is `1430`. Change it in CONFIG:
+1. Create an `images/` folder in the project root.
+2. Upload your photos to the folder.
+3. Reference them inside the configuration.
+
+Example:
+
 ```javascript
-password: "1430",   // ← change this
+img: "images/photo1.jpg"
 ```
-The input shows pink hearts (♥) as you type — turns red if wrong, unlocks with animation if correct.
 
 ---
 
-Made with 💗 By Moin Shadab — one file, zero dependencies, deploys free on GitHub Pages.
+### Option 2: Use External Image URLs
+
+Upload images to a hosting service such as Imgur or Google Drive and use the direct image URL.
+
+Example:
+
+```javascript
+img: "https://i.imgur.com/example.jpg"
+```
+
+---
+
+## 📌 Where Images Are Used
+
+| Configuration Key       | Purpose                                        |
+| ----------------------- | ---------------------------------------------- |
+| `pinSlides[i].img`      | Main Apple-style storytelling sections         |
+| `memories[i].img`       | Memory gallery and photo wall                  |
+| HTML image placeholders | Additional reveal sections throughout the page |
+
+For custom reveal sections, replace the existing placeholder elements with:
+
+```html
+<img src="your-image-url.jpg" alt="Memory">
+```
+
+---
+
+## 🎨 Customizing Colors
+
+The website uses CSS variables for easy theme customization. Edit the values inside the `:root` selector:
+
+```css
+--pink-deep:  #c9517a;
+--pink-main:  #e8789a;
+--pink-soft:  #f4a7be;
+--pink-blush: #fce4ec;
+```
+
+Feel free to replace these colors with any palette that matches your preferred style.
+
+---
+
+## 🔒 Password Protection
+
+The default password is:
+
+```javascript
+password: "1430"
+```
+
+Simply replace it with your preferred code.
+
+Additional effects include:
+
+* Animated heart-style password masking
+* Visual feedback for incorrect entries
+* Smooth unlock animation upon successful authentication
+
+---
+
+## 🚀 Deployment
+
+This project is designed to work seamlessly with GitHub Pages.
+
+1. Push the repository to GitHub.
+2. Open **Settings → Pages**.
+3. Select the deployment branch.
+4. Save the configuration.
+5. Your birthday website will be live within a few moments.
+
+---
+
+## 💗 Author
+
+Created by **Moin Shadab**
+
+A lightweight, single-file project built to be easy to customize, easy to deploy, and memorable for someone special.

@@ -882,7 +882,8 @@ section {
       <!-- REPLACE src with real image path -->
       <div class="img-placeholder" style="aspect-ratio:3/4">
         <span class="big-icon">📸</span>
-        <strong>Add Photo 1 Here</strong>
+        <!-- <strong>Add Photo 1 Here</strong> -->
+          <img src="images/image1.jpeg" alt="Jasmeen">
         <small>Replace this div with an &lt;img&gt; tag</small>
       </div>
       <div class="img-frame"></div>
@@ -907,7 +908,7 @@ section {
       <div class="pin-canvas" id="pinCanvas">
 
         <!-- Slide images — replace src with real photos -->
-        <div class="pin-img active" id="pinImg0" style="background:linear-gradient(135deg,#c9517a,#e8789a)">
+        <!-- <div class="pin-img active" id="pinImg0" style="background:linear-gradient(135deg,#c9517a,#e8789a)">
           <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:80px">📸</div>
         </div>
         <div class="pin-img" id="pinImg1" style="background:linear-gradient(135deg,#e8789a,#f4a7be)">
@@ -918,8 +919,14 @@ section {
         </div>
         <div class="pin-img" id="pinImg3" style="background:linear-gradient(135deg,#fce4ec,#c9517a)">
           <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:80px">💫</div>
-        </div>
+        </div> -->
+<img class="pin-img active" id="pinImg0" src="images/image2.jpeg" alt="Jasmeen">
 
+<img class="pin-img" id="pinImg1" src="images/image3.jpeg" alt="Jasmeen">
+
+<img class="pin-img" id="pinImg2" src="images/image4.jpeg" alt="Jasmeen">
+
+<img class="pin-img" id="pinImg3" src="images/image5.jpeg" alt="Jasmeen">
         <div class="pin-overlay"></div>
 
         <!-- Slide texts -->
@@ -939,7 +946,7 @@ section {
           <p id="pinP2">She enters a room and the whole vibe shifts. Laughter comes easier, the air feels lighter, and somehow everything just feels more alive. That's the jasmeen effect.</p>
         </div>
         <div class="pin-text" id="pinText3">
-          <p class="pin-num">04 / 04</p>
+          <p class="pin-num">04 / 04 yevdu </p>
           <h2 id="pinH3">Her Magic</h2>
           <p id="pinP3">She's the kind of rare that happens once in a universe. Everything about her — the way she thinks, the way she feels, the way she exists — is extraordinary.</p>
         </div>
@@ -960,7 +967,8 @@ section {
     <div class="reveal-img-wrap sr-right">
       <div class="img-placeholder" style="aspect-ratio:3/4">
         <span class="big-icon">🌸</span>
-        <strong>Add Photo 2 Here</strong>
+        <!-- <strong>Add Photo 2 Here</strong> -->
+         <img src="images/image3.jpeg" alt="Jasmeen">
         <small>Replace this div with an &lt;img&gt; tag</small>
       </div>
       <div class="img-frame"></div>
@@ -1016,7 +1024,8 @@ section {
     <div class="reveal-img-wrap sr-left">
       <div class="img-placeholder" style="aspect-ratio:3/4">
         <span class="big-icon">💫</span>
-        <strong>Add Photo 3 Here</strong>
+        <!-- <strong>Add Photo 3 Here</strong> -->
+         <img src="images/image6.jpeg" alt="Jasmeen">
         <small>Replace this div with an &lt;img&gt; tag</small>
       </div>
       <div class="img-frame"></div>
@@ -1064,7 +1073,7 @@ section {
     <div class="finale-hearts sr">💗 💖 💓 💗 💖</div>
     <br/><br/>
     <p style="font-family:var(--font-ui);font-size:13px;color:var(--text-light);margin-top:40px;" class="sr">
-      Made with love, just for her By Moin Shadab ✨
+      Made with love, just for her ✨
     </p>
   </section>
 
@@ -1115,16 +1124,28 @@ const CONFIG = {
 
   // ── Memory wall ──
   // Replace 'null' with real image URLs. captionText is shown on hover.
+//   <img src="images/image1.jpeg" alt="Jasmeen">
+//   memories: [
+//     { img: null, caption: "That smile tho ✨",         ar: "4/5"  },
+//     { img: null, caption: "Main character energy 💅",   ar: "1/1"  },
+//     { img: null, caption: "Effortlessly iconic 🌸",     ar: "3/4"  },
+//     { img: null, caption: "Living her best life 💫",    ar: "1/1"  },
+//     { img: null, caption: "She woke up like this 🌺",   ar: "4/5"  },
+//     { img: null, caption: "Pure sunshine 🌟",           ar: "3/4"  },
+//     { img: null, caption: "Heart full of gold 💗",       ar: "1/1"  },
+//     { img: null, caption: "Her world, we just live in it ✨", ar: "4/5" },
+//     { img: null, caption: "Unforgettable moments 🎀",   ar: "1/1"  },
+//   ],
   memories: [
-    { img: null, caption: "That smile tho ✨",         ar: "4/5"  },
-    { img: null, caption: "Main character energy 💅",   ar: "1/1"  },
-    { img: null, caption: "Effortlessly iconic 🌸",     ar: "3/4"  },
-    { img: null, caption: "Living her best life 💫",    ar: "1/1"  },
-    { img: null, caption: "She woke up like this 🌺",   ar: "4/5"  },
-    { img: null, caption: "Pure sunshine 🌟",           ar: "3/4"  },
-    { img: null, caption: "Heart full of gold 💗",       ar: "1/1"  },
-    { img: null, caption: "Her world, we just live in it ✨", ar: "4/5" },
-    { img: null, caption: "Unforgettable moments 🎀",   ar: "1/1"  },
+    { img: 'images/image1.jpeg', caption: "That smile tho ✨",         ar: "4/5"  },
+    { img: 'images/image2.jpeg', caption: "Main character energy 💅",   ar: "1/1"  },
+    { img: 'images/image3.jpeg', caption: "Effortlessly iconic 🌸",     ar: "3/4"  },
+    { img: 'images/image4.jpeg', caption: "Living her best life 💫",    ar: "1/1"  },
+    { img: 'images/image5.jpeg', caption: "She woke up like this 🌺",   ar: "4/5"  },
+    { img: 'images/image6.jpeg', caption: "Pure sunshine 🌟",           ar: "3/4"  },
+    { img: 'images/image7.jpeg', caption: "Heart full of gold 💗",       ar: "1/1"  },
+    { img: 'images/image8.jpeg', caption: "Her world, we just live in it ✨", ar: "4/5" },
+    { img: 'images/image9.jpeg', caption: "Unforgettable moments 🎀",   ar: "1/1"  },
   ],
 };
 /* ═══════════════════════════════════════════════ */
